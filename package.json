@@ -1,32 +1,32 @@
 {
-  "name": "PxLoader",
+  "name": "pxloader-browserify",
   "title": "PxLoader",
-  "version": "1.0.0",
-  "description": "PxLoader is a simple JavasScript library for creating preloaders and resource downloaders for HTML5 apps",
+  "version": "1.0.1",
+  "description": "PxLoader fork to deal with Browserify",
   "main": "dist/pxloader-all.min.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/thinkpixellab/PxLoader.git"
+    "url": "https://github.com/vdaguenet/PxLoader.git"
   },
   "keywords": [
     "PxLoader",
+    "browserify",
     "loader",
     "preloader",
     "loading",
     "preloading"
   ],
   "author": {
-    "name": "Pixel Lab",
-    "url": "http://thinkpixellab.com"
+    "name": "Valentin Daguenet",
+    "email": "valentin.daguenet@gmail.com",
+    "url": "https://github.com/vdaguenet"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thinkpixellab/PxLoader/issues"
+    "url": "https://github.com/vdaguenet/PxLoader/issues"
   },
-  "homepage": "http://thinkpixellab.com/PxLoader",
+  "homepage": "https://github.com/vdaguenet/PxLoader",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.5",
