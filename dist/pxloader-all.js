@@ -1,4 +1,4 @@
-/*! PxLoader v1.0.1 | https://github.com/vdaguenet/PxLoader */
+/*! PxLoader v1.0.1 | https://github.com/vdaguenet/pxloader-browserify */
 /*global define: true */
 
 // Tag object to handle tag intersection; once created not meant to be changed
@@ -655,7 +655,7 @@ function PxLoaderVideo(url, tags, priority, origin) {
     }
 
     if(origin !== undefined) {
-        this.img.crossOrigin = origin;
+        this.vid.crossOrigin = origin;
     }
     this.tags = tags;
     this.priority = priority;
