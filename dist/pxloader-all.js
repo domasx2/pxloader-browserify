@@ -1,4 +1,4 @@
-/*! PxLoader v1.0.1 | https://github.com/vdaguenet/pxloader-browserify */
+/*! PxLoader v1.0.2 | https://github.com/vdaguenet/pxloader-browserify */
 /*global define: true */
 
 // Tag object to handle tag intersection; once created not meant to be changed
@@ -692,16 +692,39 @@ function PxLoaderVideo(url, tags, priority, origin) {
         // NOTE: Must add event listeners before the src is set. We
         // also need to use the readystatechange because sometimes
         // load doesn't fire when an video is in the cache.
-        self.bind('load', onLoad);
-        self.bind(self.readyEventName, onReadyStateChange);
-        self.bind('error', onError);
+       // self.bind('load', onLoad);
+       // self.bind(self.readyEventName, onReadyStateChange);
+        //self.bind('error', onError);
 
         // sometimes the browser will intentionally stop downloading
         // the video. In that case we'll consider the video loaded
-        self.bind('suspend', onLoad);
+        //self.bind('suspend', onLoad);
 
-        self.vid.src = url;
-        self.vid.load();
+        //console.log('downloading video', url);
+
+        var xhr = new XMLHttpRequest();
+        var self = this;
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+        xhr.onload = function(e) {
+            if (this.status === 200) {
+                //console.log("got video", url);
+                var myBlob = this.response;
+                var vid = (window.webkitURL ? window.webkitURL : window.URL).createObjectURL(myBlob);
+                // myBlob is now the blob that the object URL pointed to.
+                self.vid.src = vid;
+                // not needed if autoplay is set for the video element
+                // video.play()
+            } else {
+               // console.error('failed to load video', url);
+                onError(); 
+            }
+        };
+
+        xhr.send();
+
+       // self.vid.src = url;
+       // self.vid.load();
     };
 
     // called by PxLoader to check status of video (fallback in case
