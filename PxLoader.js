@@ -79,9 +79,13 @@ function PxLoader(settings) {
     settings = settings || {};
     this.settings = settings;
 
+    if (!settings.concurrency) {
+        settings.concurrency = 10;
+    }
+
     // how frequently we poll resources for progress
     if (settings.statusInterval == null) {
-        settings.statusInterval = 5000; // every 5 seconds by default
+        settings.statusInterval = 200; // every 200 ms by default
     }
 
     // delay before logging since last progress change
@@ -197,6 +201,19 @@ function PxLoader(settings) {
         };
     };
 
+
+    var startEntries = (function() {
+      var countWaiting = entries.filter(function(entry) { return entry.status === ResourceState.WAITING;});
+      if (countWaiting.length < settings.concurrency) {
+        var queued = entries.filter(function(entry) { return entry.status === ResourceState.QUEUED;});
+        for (var i = 0, len = Math.min(queued.length, settings.concurrency); i < len; i++) {
+          var entry = queued[i];
+          entry.status = ResourceState.WAITING;
+          entry.resource.start(this);
+        }
+      }
+    }).bind(this);
+
     this.start = function(orderedTags) {
         timeStarted = Date.now();
 
@@ -205,15 +222,12 @@ function PxLoader(settings) {
         entries.sort(compareResources);
 
         // trigger requests for each resource
-        for (var i = 0, len = entries.length; i < len; i++) {
-            var entry = entries[i];
-            entry.status = ResourceState.WAITING;
-            entry.resource.start(this);
-        }
+        startEntries();
 
         // do an initial status check soon since items may be loaded from the cache
         setTimeout(statusCheck, 100);
     };
+
 
     var statusCheck = function() {
         var checkAgain = false,
@@ -223,6 +237,9 @@ function PxLoader(settings) {
 
         for (var i = 0, len = entries.length; i < len; i++) {
             var entry = entries[i];
+            if (entry.status === ResourceState.QUEUED) {
+              checkAgain = true;
+            }
             if (entry.status !== ResourceState.WAITING) {
                 continue;
             }
@@ -241,6 +258,8 @@ function PxLoader(settings) {
                 }
             }
         }
+
+        startEntries();
 
         // log any resources that are still pending
         if (shouldLog && checkAgain) {
