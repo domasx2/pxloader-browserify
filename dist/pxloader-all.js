@@ -724,11 +724,11 @@ function PxLoaderVideo(url, tags, priority, origin) {
         var xhr = new XMLHttpRequest();
         var self = this;
         xhr.open('GET', url, true);
-        xhr.responseType = 'blob';
+        xhr.responseType = 'arraybuffer';
         xhr.onload = function(e) {
             if (this.status === 200) {
                 //console.log("got video", url);
-                var myBlob = this.response;
+                var myBlob = new Blob([this.response]);
                 var vid = (window.webkitURL ? window.webkitURL : window.URL).createObjectURL(myBlob);
                 // myBlob is now the blob that the object URL pointed to.
                 self.vid.src = vid;
